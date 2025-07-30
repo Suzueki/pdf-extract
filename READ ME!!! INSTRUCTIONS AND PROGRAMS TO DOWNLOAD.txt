@@ -1,3 +1,8 @@
+https://github.com/Suzueki/pdf-extract
+where I will be pushing minor changes/fixes in the near future, if I make significant changes to anything I will add them to the OneDrive folder.
+
+
+THIS GUIDE IS MEANT PRIMARILY FOR WINDOWS USERS. FOLLOW MACOS PATH INSTRUCTIONS IF YOU HAVE A MAC OR THE INSTALLATION WILL FAIL.
 0. Editing path envs. guide. Please keep referring back to this later in the guide! There are several things to install and it all fails if something isn't installed.
    Press Win, type in "Edit the system environment variables"
    Open it.

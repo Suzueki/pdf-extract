@@ -7,8 +7,21 @@
    To add new Path
    Click "New"
    Copy paste "your" program's path. (By yours, I mean Tesseract's, Python's, and Ollama. More about these programs later in this guide.)
+(try without Poppler, it may run without. If it raises an exception, download poppler)
    Press "OK" in that GUI, Environment Variables, and finally press "Apply" in system variables OR IT WON'T UPDATE!! IMPORTANT. 
    
+FOR MAC USERS: Adding variables to Path is different but the installations are similar.
+   Open your terminal (Cmd + space, then type "Terminal" and open)
+   Open your config file (either zsh or bash) with "nano ~/.zshrc" or "nano ~/.bash_profile"
+   To add Path variables, type "export PATH="$PATH:/pathname/", where /pathname/ is the program directory that you're installing Tesseract, Ollama, Python, and Poppler(try without Poppler, it may run without. If it raises an exception, download poppler) 
+   To apply changes, "source ~/.zshrc" or "source ~/.bash_profile"
+   If that doesn't work, https://stackoverflow.com/questions/22465332/setting-path-environment-variable-in-macos-permanently
+   or an online guide for your OS (since macOS seems to have several versions)
+   (I apologize if these instructions are flawed - I'm a Windows user. Additionally! 
+   IMPORTANT FOR MAC USERS
+   PLEASE DON'T DOWNLOAD PROGRAM FILES (the python script is okay) from the GitHub repo - MacOS uses a unix-styled language while Windows uses something else so there is an extremely high chance of it faulting and crashing. Instead, please follow the installations meant for macOS below.)
+
+
 1. Download and install Python 3.11.9 from 
    https://www.python.org/downloads/
    While installing, check the box “Add Python to PATH” before clicking 'Install Now'.

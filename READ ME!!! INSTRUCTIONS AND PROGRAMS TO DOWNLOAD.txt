@@ -1,0 +1,88 @@
+0. Editing path envs. guide. Please keep referring back to this later in the guide! There are several things to install and it all fails if something isn't installed.
+   Press Win, type in "Edit the system environment variables"
+   Open it.
+   Go to "Advanced" in the top bar
+   Click "Environment Variables",
+   In user variables for {user}, double click Path. (This opens another GUI that's a lot nicer.)
+   To add new Path
+   Click "New"
+   Copy paste "your" program's path. (By yours, I mean Tesseract's, Python's, and Ollama. More about these programs later in this guide.)
+   Press "OK" in that GUI, Environment Variables, and finally press "Apply" in system variables OR IT WON'T UPDATE!! IMPORTANT. 
+   
+1. Download and install Python 3.11.9 from 
+   https://www.python.org/downloads/
+   While installing, check the box “Add Python to PATH” before clicking 'Install Now'.
+   Python was built to evolve over time, so if you have a newer or older version, it should still work.
+   However, if errors arise, some libraries may not offer version support and it is remarkably difficult to fix them.
+
+1.5 Add Python to your path variables, if you didn't click the box. I really recommend clicking the "Add to PATH" box.
+    There are several walkthroughs on the web but you can potentially mess up your system so be careful with it.
+
+2. Navigate to your command prompt (Window key, type cmd)
+   You'll see something like:
+"Microsoft Windows [Version 10.0.26100.4652]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\maruti\"
+
+   (If you haven't added python to your path vars. correctly, this next step will show some error message.)
+   Pip is 'optional', as in, you could download everything without it, but it's tedious and prone to errors.
+   You will install pip in step 3.
+
+2.9
+   Some of these libraries need external programs. Namely, Tesseract OCR (for getting text from images) and pdf2image. Download the Windows installer from: https://github.com/UB-Mannheim/tesseract/wiki. 
+Install it and IMPORTANT: COPY THE INSTALL PATH (C:\Program Files\Tesseract-OCR\tesseract.exe) on my system, it is likely the same on yours because that's the default, but you can choose to add it wherever you want.
+Add that folder to your system PATHs as well
+Next for pdf2image's poppler.
+Download a windows build from {below} and extract it to a folder (which is that path.) 
+https://poppler.freedesktop.org/releases.html
+
+I downloaded poppler from {below} because it was the first git repo that I found to pull from!
+If the above method is failing, consider the following.
+https://github.com/oschwartz10612/poppler-windows/releases/
+Extract it to any folder, 
+Go to that folder/bin/, right click and 'Copy as path', add to system PATHs.
+
+3.
+   run: py get-pip.py
+        py -m pip install --upgrade pip
+	pip install pillow==11.2.1
+	pip install pytesseract==0.3.13
+	pip install pdf2image==1.17.0
+	pip install img2table==1.4.1
+	pip install pymupdf==1.26.1
+	pip install pandas==2.3.0
+	pip install openpyxl==3.1.5
+	pip install pydantic==2.11.7
+	pip install ollama==0.5.1
+        ollama pull phi3:mini 
+
+	NOTE: If ollama pull phi3:mini says something along the lines of 'Can't run this', you don't have enough RAM. 
+        Replace with "ollama pull llama2"
+   Other ollama models are available, and some experimentation can be done to find one that works well for other applications.
+   Personally, I found "phi3:mini" to work the best (so far! investigating phi 3B in the future but these models come out every so often and they usually have limited documentation) with decent performance. You may choose a lighter weight model if the task is less complicated, but I don't recommend going below 1B except for very predictable tasks.
+   There will be a lot of text streaming in your cmd, wait until each finishes. C:\Users\maruti\ indicates that it's finished.
+   Alternatively, run "pip install -r requirements.txt". If this doesn't work, run each command above separately.
+
+3.5 Lately, I've been looking into enum and google's genai library. For future updates, these could be promising but I'm not counting on it. 
+    Also, the phi models perform well in benchmarks! 
+    IMPORTANT: Your strongest SLM (small language model) that you can download is not necessarily something you can run.
+    If you have 4GB of RAM, I recommend llama2
+    If you have 8GB, I recommend phi3:mini
+    16GB (same as my machine), I recommend phi3:mini or qwen3:8b. 
+    32GB (larger workstations and the kind of laptops that run you >$1000) qwen3:32b or phi3:14b
+    64GB (and if you have an Nvidia GPU), consult live benchmarks for open source models. I used https://llm-stats.com/ and https://livebench.ai/#/ during the course of this project. 
+    
+
+4. That should be it for now. Run for more details:
+       ollama help
+
+4.5 Thank you for reading this!
+
+5. The following is for those trying to improve this program.
+For anyone with a LOT of processing power, time to spend, and adequate training data (several thousand or so records) and many more files to parse/extract from, consider fine-tuning a DistilBERT model for your specific task.
+https://huggingface.co/docs/transformers/model_doc/distilbert
+
+6. I approached this task with a key idea being "NEVER SEND DATA OUT."
+   You can use a private cloud if you have one (although I'm not sure why any individual would have one!)
+   If this is no longer a concern for whatever reason and you're okay with burning money on external compute, consider looking at Microsoft's AI Foundry (since we have UofT accounts) or other AI workflow sites. They are everywhere, and they ALL send your data to OpenAI or some AI company.

@@ -1,6 +1,85 @@
 https://github.com/Suzueki/pdf-extract
 where I will be pushing minor changes/fixes in the near future, if I make significant changes to anything I will add them to the OneDrive folder.
 
+For Windows users
+1. https://ollama.com/download
+   Download and close interface that opens. Add to Path, if not done automatically (watch video).
+   https://github.com/tesseract-ocr/tesseract/releases/download/5.5.0/tesseract-ocr-w64-setup-5.5.0.20241111.exe
+   Add to Path, if not done automatically (watch video).
+
+   https://www.python.org/downloads/
+   Run the installer
+   Select Add to Path option, if it doesn't for some reason, add to Path manually (can be seen in LongInstallationWithVoiceover.mkv)
+   After it finishes installing. Open Command Prompt and run each of the following:
+   python -m ensurepip --upgrade
+	pip install pillow==11.2.1
+	pip install pytesseract==0.3.13
+	pip install pdf2image==1.17.0
+	pip install img2table==1.4.1
+	pip install pymupdf==1.26.1
+	pip install pandas==2.3.0
+	pip install openpyxl==3.1.5
+	pip install pydantic==2.11.7
+	pip install ollama==0.5.1
+        ollama pull phi3:mini
+
+The video is long and contains a lot of talking but I did go through the entire installation and some other information.
+That's the entire installation. You may disregard what's below.
+
+1.1 For MacOS users, we're going to be using VSCode for the Python portion.
+    https://www.python.org/downloads/macos/ Download it here first.
+    This adds Python to PATH.    
+
+    For Tesseract OCR, https://tesseract-ocr.github.io/tessdoc/Installation.html
+    You'll need either MacPorts or Homebrew, neither of which is particularly easy to configure, but I recommend Homebrew.
+    Follow the instructions on both Homebrew and the tesseract site. 
+	https://tesseract-ocr.github.io/tessdoc/Installation.html
+	https://brew.sh/
+
+    After installing it, you'll need to add it to Path. 
+    First, in command line, run: echo $PATH
+    This is the list of directories that your system searches for programs when it can't find something initially.
+    If tesseract is in there, do nothing.
+    Else, run:  brew info tesseract
+         this tells you if tesseract was installed or not, after homebrew was installed!
+         run: echo $PATH, this shows your current path
+         run: echo 'export PATH="/opt/homebrew/bin:$PATH"' >> ~/.zprofile
+	 run: source ~/.zprofile
+Depending on your Mac's build, you might have to replace the 
+	Apple Macs: /opt/homebrew/bin, with
+	Intel Macs: /usr/local/bin
+
+    For Ollama, the current installer at https://ollama.com/download/mac adds itself to PATH.
+   
+
+2. For VSCode users
+First, try to run the script by pressing the grey hollow triangle to the far right of the python file name (in the editor, once you've opened the file)
+It will fail, but it will also show the PROBLEMS tab. These are the missing imports because VSCode has no idea where we're getting them from.
+
+To resolve this: 
+Make sure you have the Python script and the requirements.txt file in the same folder, which you then open in VSCode by selecting a folder.
+Open a Terminal by pressing the 3 dots next to Run (File Edit Selection View Go Run ---) and then Terminal, New Terminal
+Press Ctrl-Shift-P, Create Virtual Environment (this helps if you want to run multiple scripts concurrently; perhaps you want to run the Webscraper project with the files being read/added into a folder, which we specify as the same folder that we're performing this order parser on! I might record a video about this application for section 69 or similar later)
+Click Venv, and then click Create New, then Python 3.11.9 (or whatever you have)
+Now, select requirements.txt, and press OK.
+It will now install those into the Virtual Environment. (Takes a while because of all the dependencies we're pulling, it can take about a minute, depends on your network connection/download speed)
+Once it's done, you should see considerably fewer lines in PROBLEMS (specifically, those missing import statements will have disappeared).
+You can now run the script (first window is for the folder in which we get files to operate on, then select two Excel files to add to, then a folder to put the finished files into.)
+I recommend minimizing the VSCode instance now so you can see those File Explorer interface pop-ups.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 THIS GUIDE IS MEANT PRIMARILY FOR WINDOWS USERS. FOLLOW MACOS PATH INSTRUCTIONS IF YOU HAVE A MAC OR THE INSTALLATION WILL FAIL.
 0. Editing path envs. guide. Please keep referring back to this later in the guide! There are several things to install and it all fails if something isn't installed.
@@ -27,6 +106,7 @@ FOR MAC USERS: Adding variables to Path is different but the installations are s
    PLEASE DON'T DOWNLOAD PROGRAM FILES (the python script is okay) from the GitHub repo - MacOS uses a unix-styled language while Windows uses something else so there is an extremely high chance of it faulting and crashing. Instead, please follow the installations meant for macOS below.)
 
 
+
 1. Download and install Python 3.11.9 from 
    https://www.python.org/downloads/
    While installing, check the box “Add Python to PATH” before clicking 'Install Now'.
@@ -49,7 +129,8 @@ C:\Users\maruti\"
 
 2.9
    Some of these libraries need external programs. Namely, Tesseract OCR (for getting text from images) and pdf2image. Download the Windows installer from: https://github.com/UB-Mannheim/tesseract/wiki. 
-Install it and IMPORTANT: COPY THE INSTALL PATH (C:\Program Files\Tesseract-OCR\tesseract.exe) on my system, it is likely the same on yours because that's the default, but you can choose to add it wherever you want.
+https://tesseract-ocr.github.io/tessdoc/Installation.html
+Install it and IMPORTANT: COPY THE INSTALL PATH (C:\Program Files\Tesseract-OCR\) on my system, it is likely the same on yours because that's the default, but you can choose to add it wherever you want.
 Add that folder to your system PATHs as well
 Next for pdf2image's poppler.
 Download a windows build from {below} and extract it to a folder (which is that path.) 
@@ -90,6 +171,8 @@ Go to that folder/bin/, right click and 'Copy as path', add to system PATHs.
     16GB (same as my machine), I recommend phi3:mini or qwen3:8b. 
     32GB (larger workstations and the kind of laptops that run you >$1000) qwen3:32b or phi3:14b
     64GB (and if you have an Nvidia GPU), consult live benchmarks for open source models. I used https://llm-stats.com/ and https://livebench.ai/#/ during the course of this project. 
+
+3.9 Open with IDLE or VSCode, run (Run option in IDLE or little triangle in VSCode).
     
 
 4. That should be it for now. Run for more details:

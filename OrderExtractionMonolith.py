@@ -60,7 +60,7 @@ class Order(BaseModel):
     LandlordRate: float
     AGIRateTotal: float
     CapitalExpenditure: list[str] | None
-    LandlordAttendance: Attendance
+    LandlordAttendance: Attendance #enumerated types, as declared above
     LandlordLegalAttendance: Attendance
     TenantAttendance: Attendance
     TenantLegalAttendance: Attendance
@@ -164,7 +164,7 @@ totalFields = ["FileName", "Address", "LandlordName", "FileNumber", "DateOfHeari
 
 #Give the SLM instructions here.
 #Be concise, give it any extremely important instructions
-#EXPLAIN WHAT EACH FIELD MEANS - it is a token predictor, not something that can read between the lines
+#EXPLAIN WHAT EACH FIELD MEANS - it is a token predictor, not something that is intelligent or capable of problem solving
 questionsContext = "You are an assistant that extracts data from long strings of rent increase court orders." +\
 "You keep answers as short as possible (a couple words per field maximum, (one word if possible, your output tokens are limited to 1024) and don't repeat entries for the same field." +\
 "The address consists of a number and the street name. It typically ends in 'Road' or 'Street' or 'Drive'.\n" +\
@@ -205,9 +205,12 @@ def FinalApproach(file):
     firstPass = True
     for address in x:
         answers = copy.deepcopy(BaseAnswers)
+        #Make an answer dictionary for each address
         answers["Address"] = address
         answers = Table(file, pages, answers, len(x)!=1)
-        
+        #Passing multiple as a condition
+
+        #Pass the functions that Miscellaneous should call
         answers = Miscellaneous(pages, file, fileContents, answers, [FirstEffectiveDate, LandlordRate])
 
         print("Starting LLMCall")
@@ -531,20 +534,20 @@ def tableToField(df, answers):
     return answers
 
 def tableJoiner(tables, pages):
-    FullDF = pd.DataFrame()
-    for i in pages:
+    FullDF = pd.DataFrame() #accumulator dataframe
+    for i in pages: #for each page, vertically add them
         df = pd.DataFrame()
         
         year = {"TotalIncreaseexcludesguideline":0,
-                    "%incforCapExp":0}
-        for j in tables[i]:
+                    "%incforCapExp":0} #Noticed that these columns were similar but just had the year, so we can track them
+        for j in tables[i]: #for each page, right join the tables on that page
             removed = 0
             frame = j.df
-            frame.columns = frame.columns.astype(str).str.replace(r'[()\d\s.]+', '', regex=True)
+            frame.columns = frame.columns.astype(str).str.replace(r'[()\d\s.]+', '', regex=True) #clean with regex
             while (not any(col in frame.columns for col in splitColumns + totalColumns) and removed < 5 and len(frame) > 0):
-                frame.columns = frame.iloc[0]
-                frame = frame[1:]
-                frame.columns = frame.columns.astype(str).str.replace(r'[()\d\s.]+', '', regex=True)
+                frame.columns = frame.iloc[0] #we cut off rows until we see what looks like an actual header row
+                frame = frame[1:] #this can prevent errors from non-standard tables or labeling
+                frame.columns = frame.columns.astype(str).str.replace(r'[()\d\s.]+', '', regex=True) 
                 removed += 1
 
             #this regex simply removes digits, whitespace, and .'s.
@@ -553,31 +556,31 @@ def tableJoiner(tables, pages):
             selected_cols = []
             column_map = {}
 
-            for col in frame.columns:
+            for col in frame.columns: #standardize each column, by lowercasing
                 col_lower = col.lower()
                 if col in totalColumns:
-                    selected_cols.append(col)
+                    selected_cols.append(col) #if lowercased column is what we're looking for, add it
 
                 if col in splitColumns:
                     year[col] = year[col] + 1
                     column_map[col] = f"{col}{year[col]}"
-                    selected_cols.append(col)
+                    selected_cols.append(col) #go from standardized name to standardized name with year
 
-                if "unit" in col_lower:
+                if "unit" in col_lower: #add unit column
                     selected_cols.append(col)
                     
             frame = frame[selected_cols]
-            frame = frame.rename(columns = column_map)
+            frame = frame.rename(columns = column_map) #remap table onto our specified tables
 
             for col in frame.columns:
                 try:
-                    frame[col] = pd.to_numeric(frame[col])
-                except Exception:
+                    frame[col] = pd.to_numeric(frame[col]) #try to turn all fields into numbers
+                except Exception: #if failing, leave that column as a string
                     pass
             
-            df = pd.concat([df, frame], axis=1)
-            df = df.loc[:, ~df.columns.duplicated()]
-        FullDF = pd.concat([FullDF, df], axis=0, ignore_index=True)
+            df = pd.concat([df, frame], axis=1) #right join
+            df = df.loc[:, ~df.columns.duplicated()] #smash tables together if they have the same columns
+        FullDF = pd.concat([FullDF, df], axis=0, ignore_index=True) #full join
     return FullDF
 
 #You'll notice that the below function takes a page list and a Schedule Number
